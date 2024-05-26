@@ -55,45 +55,44 @@ public class VictoryCalculator {
     }
 
     private LinkedList<Point> getRowForDirection(RowDirection direction, Point p, int[][] board) {
+        LinkedList<Point> row = new LinkedList<>();
+        row.add(p);
         switch (direction) {
             case ROW:
-                return getRightRow(p, board);
+                processRightRow(p, board, row);
+                break;
             case COLUMN:
-                return getLowerColumn(p, board);
+                processLowerColumn(p, board, row);
+                break;
             case RIGHT_DIAGONAL:
-                return getRightLowerDiagonal(p, board);
+                processRightLowerDiagonal(p, board, row);
+                break;
             case LEFT_DIAGONAL:
-                return getLeftLowerDiagonal(p, board);
+                processLeftLowerDiagonal(p, board, row);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown row direction");
         }
+        return row;
     }
 
-    private LinkedList<Point> getRightRow(Point p, int[][] board) {
-        LinkedList<Point> row = new LinkedList<>();
-        row.add(p);
+    private void processRightRow(Point p, int[][] board, LinkedList<Point> row) {
         for (int i = p.getX() + 1; i < Constants.BOARD_DIMENSION; i++) {
             if (board[p.getY()][i] == p.getColour())
                 row.add(new Point(i, p.getY(), p.getColour()));
             else break;
         }
-        return row;
     }
 
-    private LinkedList<Point> getLowerColumn(Point p, int[][] board) {
-        LinkedList<Point> column = new LinkedList<>();
-        column.add(p);
+    private void processLowerColumn(Point p, int[][] board, LinkedList<Point> column) {
         for (int i = p.getY() + 1; i < Constants.BOARD_DIMENSION; i++) {
             if (board[i][p.getX()] == p.getColour())
                 column.add(new Point(p.getX(), i, p.getColour()));
             else break;
         }
-        return column;
     }
 
-    private LinkedList<Point> getRightLowerDiagonal(Point p, int[][] board) {
-        LinkedList<Point> diagonal = new LinkedList<>();
-        diagonal.add(p);
+    private void processRightLowerDiagonal(Point p, int[][] board, LinkedList<Point> diagonal) {
         int y = p.getY();
         for (int i = p.getX() + 1; i < Constants.BOARD_DIMENSION; i++) {
             y++;
@@ -101,12 +100,9 @@ public class VictoryCalculator {
                 diagonal.add(new Point(i, y, p.getColour()));
             else break;
         }
-        return diagonal;
     }
 
-    private LinkedList<Point> getLeftLowerDiagonal(Point p, int[][] board) {
-        LinkedList<Point> diagonal = new LinkedList<>();
-        diagonal.add(p);
+    private void processLeftLowerDiagonal(Point p, int[][] board, LinkedList<Point> diagonal) {
         int y = p.getY();
         for (int i = p.getX() - 1; i >= 0; i--) {
             y++;
@@ -114,7 +110,6 @@ public class VictoryCalculator {
                 diagonal.add(new Point(i, y, p.getColour()));
             else break;
         }
-        return diagonal;
     }
 
     private boolean noVictoryYet(int colour) {
